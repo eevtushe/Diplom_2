@@ -6,7 +6,6 @@ import static user.UserActions.*;
 import static org.hamcrest.Matchers.*;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +16,6 @@ public class UserAuthorizationTest {
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = URL;
         createNewUser(CREATE_USER);
         token = getUserToken(LOGIN_USER);
     }

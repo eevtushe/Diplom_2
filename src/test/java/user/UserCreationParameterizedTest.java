@@ -6,9 +6,7 @@ import static user.UserActions.createNewUser;
 import static org.hamcrest.Matchers.equalTo;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -28,11 +26,6 @@ public class UserCreationParameterizedTest {
                 {new CreateUser(EMAIL, "", NAME)},
                 {new CreateUser(EMAIL, PASSWORD, "")},
         };
-    }
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = URL;
     }
 
     @Test

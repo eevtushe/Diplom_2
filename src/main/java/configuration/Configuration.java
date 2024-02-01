@@ -1,6 +1,7 @@
 package configuration;
 
 import com.github.javafaker.Faker;
+import io.restassured.RestAssured;
 import user.ChangeUser;
 import order.CreateOrder;
 import user.CreateUser;
@@ -10,6 +11,10 @@ public class Configuration {
 
     //URL
     public final static String URL = "https://stellarburgers.nomoreparties.site";
+
+    static {
+        RestAssured.baseURI = URL;
+    }
 
     //USER
     public final static String USER_AUTH = "/api/auth/login ";

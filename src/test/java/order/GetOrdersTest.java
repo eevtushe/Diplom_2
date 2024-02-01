@@ -9,19 +9,12 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Test;
 
 public class GetOrdersTest {
     private static String token;
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = URL;
-    }
 
     @Test
     @DisplayName("Проверяем авторизацию корректного пользователя")
@@ -30,7 +23,7 @@ public class GetOrdersTest {
         createNewUser(CREATE_USER);
         token = getUserToken(LOGIN_USER);
         newOrder(CREATE_ORDER);
-        Response response = OrderCreator.getOrder(token, true);
+        Response response = OrderCreator.getOrder(token);
         response.then().assertThat().body("success", equalTo(true))
                 .and().body("orders", notNullValue())
                 .and()
@@ -41,7 +34,7 @@ public class GetOrdersTest {
     @DisplayName("Проверяем авторизацию некорректного пользователя")
     @Description("Ожидаем, что вернется код ответа 401 и сообщение об ошибке")
     public void getWrongUserTest() {
-        Response response = OrderCreator.getOrder(token, false);
+        Response response = OrderCreator.getOrder(token);
         response.then().assertThat().body("success", equalTo(false))
                 .and().body("message", equalTo("You should be authorised"))
                 .and()
