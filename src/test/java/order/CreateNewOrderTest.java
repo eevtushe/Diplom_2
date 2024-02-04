@@ -1,11 +1,12 @@
 package order;
 
+import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.*;
 import static configuration.Configuration.*;
 import static order.OrderCreator.newOrder;
+import static org.hamcrest.Matchers.*;
 import static user.UserActions.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
@@ -23,7 +24,9 @@ public class CreateNewOrderTest {
     }
 
     private String[] getValidIngredients() {
-        return new String[]{"61c0c5a71d1f82001bdaaa6d", "61c0c5a71d1f82001bdaaa6c"};
+        Response response = given().when().get("/api/ingredients");
+        String[] ingredients = response.jsonPath().get("ingredients");
+        return ingredients;
     }
 
     @Test
@@ -33,7 +36,7 @@ public class CreateNewOrderTest {
         String[] validIngredients = getValidIngredients();
         CreateOrder createOrder = new CreateOrder(validIngredients);
 
-        Response response = newOrder(createOrder);
+        Response response = newOrder(CREATE_ORDER);
         response.then().log().all().assertThat().body("name", notNullValue())
                 .and().body("order.number", notNullValue())
                 .and().body("success", equalTo(true))
@@ -46,7 +49,7 @@ public class CreateNewOrderTest {
     @Description("Ожидаем, что вернется код ответа 400 и сообщение об ошибке")
     public void createOrderLoginTrueEmptyIngredientsTest() {
         String[] validIngredients = getValidIngredients();
-        CreateOrder createOrder = new CreateOrder(new String[]{});
+        CreateOrder createOrder = new CreateOrder(validIngredients);
 
         Response response = newOrder(createOrder);
         response.then().assertThat().body("success", equalTo(false))
